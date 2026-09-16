@@ -8,6 +8,9 @@ The MCP server runs **locally on each user's machine** — there is nothing to h
 plugin means sharing a repository; every colleague installs it and authenticates with their own
 back-office login, so BO permissions and audit records stay per-person.
 
+> **Just want it working?** [QUICKSTART.md](QUICKSTART.md) — five steps, in Russian.
+> This README is the full reference.
+
 > For trading operations on a client account, see the separate
 > [trade-revolution](https://github.com/dmikhailenko-hash/claude-mcp-plugin) plugin. This one is
 > back-office only.
