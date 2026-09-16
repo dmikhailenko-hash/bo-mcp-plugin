@@ -1,8 +1,14 @@
 # TraderEvolution Back-Office — Claude Code Plugin
 
-A Claude Code plugin that gives Claude access to the TraderEvolution **Back-Office REST API**:
-accounts, users, orders, positions, plans, reports and everything else in the BO Swagger
-specification.
+A Claude Code plugin for working with **TraderEvolution Back-Office reports**. Ask in plain words
+what a report shows, what one of its columns means, or which report to use — and get the answer,
+or the data.
+
+The reports live in the Back Office, which exposes them over its REST API. The API lists reports
+and runs them, but never returns their definition, so this plugin keeps its own knowledge of them:
+every report's columns, how the computed ones relate, and the traps that make output misleading.
+Beyond reports, the whole BO Swagger specification is reachable — accounts, users, orders,
+positions, plans — for the times a question needs something the reports do not carry.
 
 The MCP server runs **locally on each user's machine** — there is nothing to host. Sharing this
 plugin means sharing a repository; every colleague installs it and authenticates with their own
@@ -17,26 +23,30 @@ back-office login, so BO permissions and audit records stay per-person.
 
 ## How it works
 
-The BO API exposes 634 operations across about 250 paths. Turning each into its own tool would
-flood the model's context, so this plugin ships nine tools that let Claude read the specification and
-then call it:
+Nine tools. The three that matter most answer questions about reports and never touch the network:
 
 | Tool | Purpose |
 |---|---|
-| `bo_status` | Show base URL, auth state, permissions and whether the spec and report catalogue are loaded. Start here when something breaks. |
+| `bo_search_reports` | Find a report by name, or by a column it contains — *which report shows `crossprice`?* Offline. |
+| `bo_explain_report` | Explain one report: what a row is, every column, verified formulas, required filters, and the traps. Offline. |
+| `bo_report_functions` | The report engine's column functions with their formulas, for explaining how a computed column is derived. Offline. |
+
+Running a report, or reaching anything else in the API, goes through the rest:
+
+| Tool | Purpose |
+|---|---|
+| `bo_request` | Call any endpoint, including `GET /reports/{id}` to run a report. Handles login, token refresh and the `Bearer` header. |
 | `bo_search_endpoints` | Find endpoints by keyword, HTTP method or Swagger tag. |
 | `bo_describe_endpoint` | Full contract for one endpoint: parameters, enums, request body schema with `$ref`s inlined, response schema. |
-| `bo_request` | Call any endpoint. Handles login, token refresh and the `Bearer` header. |
+| `bo_status` | Show base URL, auth state, permissions and whether the spec and report catalogue are loaded. Start here when something breaks. |
 | `bo_fetch_spec` | Download and cache the Swagger specification. Needed once per machine. |
 | `bo_login` | Force re-authentication. Rarely needed — the other tools authenticate on demand. |
-| `bo_search_reports` | Find a saved report by name, or by a column it contains. Offline. |
-| `bo_explain_report` | Explain one report: what a row is, every column, verified formulas, required filters, and the traps. Offline. |
-| `bo_report_functions` | The report engine's column functions with their formulas. Offline. |
 
-A typical exchange looks like *search → describe → request*: Claude finds `/accountDetails`, reads
-which query parameters it accepts, then calls it with the right ones.
+There are 634 operations across about 250 paths. Turning each into its own tool would flood the
+model's context, so a question that needs one works as *search → describe → request*: Claude finds
+`/accountDetails`, reads which query parameters it accepts, then calls it with the right ones.
 
-### Reports
+## Reports
 
 Brokers mostly ask *what a report means*, not for its rows. The API cannot answer that — it lists
 reports and runs them, but never returns their definition. So the plugin keeps two local files:

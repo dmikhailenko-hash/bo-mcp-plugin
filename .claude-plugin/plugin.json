@@ -1,6 +1,6 @@
 {
   "name": "traderevolution-bo",
-  "description": "Back-office tools for the TraderEvolution BO REST API: explain saved reports and their columns from a local catalogue, discover endpoints from the Swagger specification, and call them with automatic authentication. Read-only until writes are explicitly enabled.",
+  "description": "Ask in plain words what a TraderEvolution Back-Office report shows, what its columns mean, and which one to use — answered from a local catalogue of every report and its columns, without calling the API. Runs the report when you want the data, and reaches the rest of the BO Swagger specification when a question needs more. Read-only until writes are explicitly enabled.",
   "version": "1.1.0",
   "author": {
     "name": "Denis Mikhailenko"

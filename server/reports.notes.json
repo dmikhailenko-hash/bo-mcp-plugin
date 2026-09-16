@@ -47,9 +47,19 @@
   },
 
   "160": {
-    "summary": "Connection events only: logins, logouts and failed logins. Not the trading event log.",
-    "grain": "One row per connection event.",
-    "filters": "connectionEventType (100 Login, 101 Logout, 102 loginFailed), connectionType (1 QUOTE, 2 TRADE, 4 HISTORY, 8 NEWS), hostAddress, clientType, appInstallID.",
+    "summary": "Connection events only: logins, logouts and failed logins, with IP address, terminal type and session id. Not the trading event log.",
+    "grain": "One row per connection event. The 'event' column holds $enter_system, $leave_system or $enter_system_failure.",
+    "columns": {
+      "sessiontype": "trade or quote. A client normally opens both at once, so one human login produces two rows.",
+      "terminaltype": "windows, Web, iOS, Android, Backoffice, Client REST API, PFIX, TradingView Trading platform, Web mobile, SOAP/BO REST API.",
+      "ipaddress": "Can be 0.0.0.0 when the address was not resolved, and shows the proxy rather than the user when one sits in front of the platform."
+    },
+    "filters": "connectionEventType (100 Login, 101 Logout, 102 loginFailed), connectionType (1 QUOTE, 2 TRADE, 4 HISTORY, 8 NEWS), hostAddress, clientType, appInstallID, login.",
+    "warnings": [
+      "Volume is high: a week on a busy stand returned 11703 rows, far past the 20000-character response limit. Narrow with login, or with connectionEventType=102 when only failures matter.",
+      "An automated account distorts every ranking. On one stand a monitoring bot accounted for 63 percent of all events, reconnecting roughly every six minutes around the clock. Identify it by an even split of trade and quote sessions, a single IP and a near-constant interval, then exclude it before drawing conclusions about people.",
+      "Counting raw events double-counts: each login yields a trade row and a quote row. Filter to $enter_system to count logins."
+    ],
     "seeAlso": [104]
   },
 
@@ -61,12 +71,18 @@
       "purchaseprice = tradevolume x crossprice    (expressed in the account currency)"
     ],
     "formulaExample": "AUD/CAD: 0.04 lots x 100000 x 0.99213 = 3968.52 CAD; 3968.52 x 0.71898996 = 2853.33 USD.",
+    "netResult": [
+      "executionfee is already signed, so the net result of an account is",
+      "    net = profit + executionfee + rebates",
+      "and NOT profit - executionfee. Subtracting turns a cost into income and can invert the ranking of accounts completely.",
+      "Proof that negative means charged: negative executionfee appears on OPENING trades, where profit is 0.00. A fee booked at the moment a position opens can only be a cost."
+    ],
     "columns": {
       "orderid": "The order this fill belongs to.",
       "tradeid": "The fill itself. This is the unique key of the row.",
       "crossprice": "Conversion rate from counter_currency into the account currency. 1.00 for pairs already quoted in the account currency.",
       "profit": "Realised P&L. Zero on opening trades - profit only materialises when a position is closed.",
-      "executionfee": "Fee charged on this fill.",
+      "executionfee": "Fee on this fill, ALREADY SIGNED: negative means charged to this account, positive means credited to it. See the warnings.",
       "rebates": "Rebate credited on this fill.",
       "tradevolume": "Notional in the counter currency.",
       "purchaseprice": "The same notional converted into the account currency.",
@@ -78,9 +94,39 @@
     "warnings": [
       "With isTotal=true the total for 'amount' is meaningless: it adds forex lots to share counts. A window with two 0.04-lot forex trades and one 276-share equity trade totals 276.08, which is not a quantity of anything. Never show that total to a broker.",
       "The total for 'purchaseprice' IS meaningful, because every row is already converted into the account currency.",
-      "On the demo stand these columns come back empty: leverage, execvenue, external_order_id, derivativetype."
+      "On the demo stand these columns come back empty: leverage, execvenue, external_order_id, derivativetype.",
+      "executionfee is SIGNED. Ranking accounts by 'profit - executionfee' is wrong and inverts the answer: on a live stand an account with gross 5.04 and fees of -124.08 came out top at +129.12, when its real result was -119.04, the worst of the set. Use profit + executionfee + rebates.",
+      "This report shows only the client's side of a fee. Where that money goes is in report 176, which books the same fee again, positive, on each receiving account."
     ],
-    "seeAlso": [118, 143]
+    "seeAlso": [118, 143, 176]
+  },
+
+  "176": {
+    "summary": "Ledger of everything that moved on an account: realised trades, fees and position revaluation, one row per movement.",
+    "grain": "One row per account operation. A single trade produces several rows - the trading result, plus one fee row for every account the fee touches.",
+    "columns": {
+      "operationtype": "Trading (operationtypeid 1), Fee (4), Stock (14). Decides how to read 'amount'.",
+      "amount": "Signed, and its MEANING DEPENDS ON operationtype: realised P&L for Trading, money moved for Fee, position value for Stock. Summing the column across types is meaningless.",
+      "accountid": "Numeric only - this report has no account name column. Join against GET /accounts, whose field is 'accountName'.",
+      "opentime": "When the position was opened, which can be months before createdat.",
+      "openprice": "Entry price of the position; 'N/A' on Fee and Stock rows.",
+      "details": "Free text, usually empty."
+    },
+    "feeMechanics": [
+      "A fee is booked as several rows sharing one tradeid, and they sum to zero: the client is charged, the receiving accounts are credited.",
+      "Observed on a live stand, one trade produced three rows:",
+      "    broker account     +22.00   credited (flat rate, identical on every trade)",
+      "    partner account     +6.88   credited (varies with volume)",
+      "    client account     -28.88   charged",
+      "So one fee splits between a fixed-rate recipient and a volume-based one, typically the broker and an introducer.",
+      "This is what confirms the sign convention in report 117: negative is charged, positive is credited."
+    ],
+    "warnings": [
+      "Unlike 119, this report DOES filter by startDate and endDate. Verified: 26 rows for September 2026, 0 rows for a one-minute window in 2019. For a statement covering a period, use this one, not 119.",
+      "Never total the 'amount' column as a whole. Group by operationtype first, or the position revaluation in the Stock rows swamps everything else - in one September sample the raw total was -713,122 while actual trading came to +46.41.",
+      "Fee rows appear on every account involved, so the same fee is counted more than once if you sum fees across all accounts. Filter to the paying account."
+    ],
+    "seeAlso": [117, 119, 153, 172]
   },
 
   "141": {
