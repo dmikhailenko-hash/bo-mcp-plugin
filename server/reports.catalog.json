@@ -1,0 +1,2446 @@
+{
+  "generatedAt": 1789544698212,
+  "baseUrl": "https://un-demo.traderevolution.com:8443/proftrading/rest",
+  "functions": [
+    {
+      "name": "INTEGER",
+      "description": "Integer (SQL)number(10), number(10, 0) == (Java)Integer"
+    },
+    {
+      "name": "NUMBER",
+      "description": "Fixed-Point Real Number (SQL)number(10, 4) == (Java)Float"
+    },
+    {
+      "name": "FORMATED_NUMBER",
+      "description": "(SQL)number, float == (Java)Float percition=2- for balances"
+    },
+    {
+      "name": "STRING",
+      "description": "String (SQL)varchar2(32) == (Java)String"
+    },
+    {
+      "name": "DATE",
+      "description": "Date (SQL)date == (Java)Date"
+    },
+    {
+      "name": "TIMESTAMP",
+      "description": "Date+Time (SQL)timestamp == (Java)Date"
+    },
+    {
+      "name": "TIMESTAMP2",
+      "description": "Date+Time+Seconds (SQL)timestamp == (Java)Date"
+    },
+    {
+      "name": "TIMESTAMP3",
+      "description": "Date + Time + Seconds + Milliseconds (SQL)timestamp == (Java)Date"
+    },
+    {
+      "name": "ID",
+      "description": "Identifier"
+    },
+    {
+      "name": "UNDEFINED",
+      "description": "Undefined (SQL)any other == (Java)String"
+    },
+    {
+      "name": "HIDDEN",
+      "description": "Hidden column"
+    },
+    {
+      "name": "EXTFIELDS",
+      "description": "EXTFIELDS(a,i) where a is - table name, i.e. person,account,instrument where i is column number of extended field identifier, i.e: userId, accountId. SHOULD BE THE LAST ONE COLUMN IN COLUMNS DEFINITION!!! because this column can turn into few columns that means some columns that depends on another columns could be affected i.e. EXTFIELDS(person,1)"
+    },
+    {
+      "name": "QUOTE",
+      "description": "type presents last quote value for specified in definitions type QUOTE(m,n) where n is: 1 =Bid, 2 = Ask, 3 = Trade m is column number with route name"
+    },
+    {
+      "name": "PROFIT",
+      "description": "type presents profit PROFIT(t,i,o,c,r,n) where t is column number with type (Buy/Sell) i is column number instrument name o is column number open price c is column number close price r is column number route name n is: 1 = Bid, 2 = Ask, 3 = Trade"
+    },
+    {
+      "name": "POSITION",
+      "description": "The type to get the value from the position. The first parameter is the number of the column with positionId. Column numbering starting from 0. The second parameter is the name of the fields in the position, for example PositionProfit, AmountAsBigDecimal, AmountExp, CloseCrossPrice, LastPrice. Example \"POSITION(positionId, PositionProfit)\""
+    },
+    {
+      "name": "ACCOUNT",
+      "description": "The type to get the value from the account. The first parameter is the number of the column with account id. Column numbering starting from 0. The second parameter is the name of the fields in the account, for example AllPositionProfit, DailyLoss, WeeklyLos. The third parameter is optional, you can specify scale. Example \"ACCOUNT(accountId,AllPositionProfit,2)\""
+    },
+    {
+      "name": "USER",
+      "description": "The type to get the value from the user. The first parameter is the number of the column with user Id. Column numbering starting from 0. The second parameter is the name of the fields in the user, for example FullAddress, CurrentBalance, Balance, DailyPnL. At the end must be the return type. Example \"USER(userId,FullAddress):RETURNS{STRING}\""
+    },
+    {
+      "name": "PRICE",
+      "description": "PRICE(instrumentid) (round for instrument)"
+    },
+    {
+      "name": "PERCENT",
+      "description": "Double value for column with percent."
+    },
+    {
+      "name": "SYSTEM_CURRENCY",
+      "description": "System currency is the name of the currency whose id is in \"FUNCTION_BASE_CURRENCY\" rule"
+    },
+    {
+      "name": "CLOSING_PRICE",
+      "description": "CLOSING_PRICE({instrumentid}, {routeid})"
+    },
+    {
+      "name": "CURRENT_PRICE",
+      "description": "CURRENT_PRICE({instrumentid}, {routeid})"
+    },
+    {
+      "name": "CURRENT_BALANCE",
+      "description": "CURRENT_BALANCE({account name}) #16057. Futures reports for AK"
+    },
+    {
+      "name": "TIMESTAMP2_DOTTED",
+      "description": "Time in format: 'dd.MM.yyyy HH:mm:ss'"
+    },
+    {
+      "name": "DATE_DOTTED",
+      "description": "Date in format: 'dd.MM.yyyy'"
+    },
+    {
+      "name": "POSITION_UNREALIZED_PNL",
+      "description": "POSITION_UNREALIZED_PNL(positionId,todate:2,for:account,quoteperiodtype:minute,spread:true,PositionUnrealizedPnL)"
+    },
+    {
+      "name": "POSITION_DAILY_PNL",
+      "description": "Column type to get daily position PnL. First parameter - column index with position id, after one different parameters, example: todate:2 - index column with date, for:system - currency type with available values: system, account, position. spread:true- spread true or false. first day calculation (day closing price - position opening price) * lots * lotsize * * crossprices * ...,  middle day (day closing price - prevous day closing price) * lots * lotsize * crossprices *..., last day calculation (position closing price - previous day closing price) * lots * lotsize * crossprices * ..., Warning: As of now, will likely fail ungracefully when used with one position."
+    },
+    {
+      "name": "AUDIT_CHANGE",
+      "description": "Type for list of changes above object"
+    },
+    {
+      "name": "AUDIT_OBJECT_DESCRIPTION",
+      "description": "Type for the object on which there were changes"
+    },
+    {
+      "name": "ACTIVE_ORDER",
+      "description": "Column type to get order value by method name. First parameter - column index with order id, second parametr - name of method. Available values: CrossPriceForManualOrder, SpreadedPrice, PendingAmount, UnSpreadedPrice"
+    },
+    {
+      "name": "POSITION_ACCOUNT_WITH_ASSET_MIN_CHANGE",
+      "description": "The type to get the value with asset min change (examle precision = 0.01) from the position. The first parameter is the number of the column with positionId. Column numbering starting from 0. The second parameter is the name of the fields in the position, for example PositionProfit, AmountAsBigDecimal, AmountExp, CloseCrossPrice, LastPrice. Example \"POSITION_ACCOUNT_WITH_ASSET_MIN_CHANGE(positionId, PositionProfit)\""
+    },
+    {
+      "name": "NUMBER_ACCOUNT_WITH_ASSET_MIN_CHANGE",
+      "description": "Column type for get nummber account with minimum min asset's step. Example NUMBER_ACCOUNT_WITH_ASSET_MIN_CHANGE(positionId), where 0 - column index with position id"
+    },
+    {
+      "name": "POSITION_CURRENT_PRICE",
+      "description": "Column type to get position current price. First parameter - column index with position id, after one different parameters, example: todate:2 - index column with date, spread:true- spread true or false. quoteperiodtype:minute - quote period type with values day or minute. Example POSITION_CURRENT_PRICE(positionId,todate:2,quoteperiodtype:minute,spread:true,CurrentPrice)"
+    },
+    {
+      "name": "POSITION_MARGIN",
+      "description": "Column type to get position margin. First parameter - column index with position id, after one different parameters, example: todate:2 - index column with date, for:system - currency type with available values: system, account, position. spread:true- spread true or false. quoteperiodtype:minute - quote period type with values day or minute. crossquoteperiodtype:minute - quote period type with values day or minute. init:true - paremeter with values true or false, if true to get init margin, else to get Maintance margin. Example POSITION_MARGIN(positionId,todate:2,quoteperiodtype:minute,spread:true)"
+    },
+    {
+      "name": "ACCOUNT_EQUITY",
+      "description": "Column type to get account equity. First parameter - column index with position id, after one different parameters, example: todate:2 - index column with date, for:system - currency type with available values: system, account, position. spread:true- spread true or false. quoteperiodtype:minute - quote period type with values day or minute. crossquoteperiodtype:minute - quote period type with values day or minute. accountinfo:2 - column index with account id. Example ACCOUNT_EQUITY(positionId,todate:4,spread:true,quoteperiodtype:minute,accountinfo:2,AccountEquity)[nosum]"
+    },
+    {
+      "name": "CALC",
+      "description": "CALC(column[14]*100/column[15],MarginUsed):RETURNS{FORMATED_NUMBER}"
+    },
+    {
+      "name": "POSITION_EXPOSURE",
+      "description": "Column type to get position exposure. Formula: real amount * legacy close price * close cross price * cross price. First parameter - column index with position id, after one different parameters, example: todate:2 - index column with date, for:system - currency type with available values: system, account, position. spread:true- spread true or false. quoteperiodtype:minute - quote period type with values day or minute. crossquoteperiodtype:minute - quote period type with values day or minute. Example POSITION_EXPOSURE(positionId,todate:2,for:system,quoteperiodtype:minute,crossquoteperiodtype:minute)"
+    },
+    {
+      "name": "ACCOUNT_CUSTOM_CONDITIONS_MARGIN",
+      "description": "Column type to get value from account with margin. Example ACCOUNT_CUSTOM_CONDITIONS_MARGIN(0,MaintenanceMargin,1), where first parameter - column index with account id, second parameter - the name of the method whose value we need to get. Examples ProfitForMargin, Balance, FullBalance, LockedSum, CreditSum, ReservedBalance, AllPositionProfit, Equity, UnsettledDeposit, BalanceNRisk, InitMargin, MaintenanceMargin, AvailableToWithdraw, DailyPnL, AvailableFunds, TotalMargin, StockValue, BlockedForStocks. Third parameter - margin calcualtor type, available values -1, 0, 1. None - -1, ACCOUNT_OPTION_MARGIN - 0, ACCOUNT_PORTFOLIO_MARGIN - 1"
+    },
+    {
+      "name": "POSITION_MARGIN_OR_PORTFOLIO_STRING",
+      "description": "Column type to get margin for position or \"Portfolio\" if margin type for position is PTRM or CBOE. Example POSITION_MARGIN_OR_PORTFOLIO_STRING(positionId,MaintenanceMargin,Margin), where first parameter - column index with position id,second parameter - the name of the method whose value we need to get. Available values: InitialMargin, MaintenanceMargin, ActualAmount"
+    },
+    {
+      "name": "EXCHANGE_VALUE",
+      "description": "EXCHANGE_VALUE(21,exchange) first param is rs index for getting instrument second param is column name #43304 Performance history report"
+    },
+    {
+      "name": "INSTR_UNDERLIER_NAME",
+      "description": "The name of the instrument that is the underlier for the instrument with the id specified in the column number. instrumentId - number of the column with instrument Id. Example INSTR_UNDERLIER_NAME(instrumentId)"
+    },
+    {
+      "name": "FORMATED_NUMBER_DOWN",
+      "description": "Usually represents balances in Tables and reports of BO. Precision is defined in general settings. In SQL - number. In Java - float, double, BigDecimal, etc. Usually formatted using {@link NumberHelper#formatRoundDown(Double)} or its overloads. #45105"
+    },
+    {
+      "name": "FORMATTED_STRIKE",
+      "description": "The strike value is accurate to the tick size of the instrument's underlier"
+    },
+    {
+      "name": "ACCURATE_NUMBER",
+      "description": "Number value with more precision"
+    },
+    {
+      "name": "PNL_OF_OPEN_POSITIONS_FOR_INSTRUMENT",
+      "description": "Total profit for all positions on the instrument. Example PNL_OF_OPEN_POSITIONS_FOR_INSTRUMENT(tradableinstrumentId), where tradableinstrumentId - is index column with tradableinstrumentId."
+    },
+    {
+      "name": "PREV_DAY_CLOSE_TRADE_VALUE",
+      "description": "Column type to get previous day close trade price. Example PREV_DAY_CLOSE_TRADE_VALUE(tradeId, 5), where first parameter - index column with trade id, second parameter - index column with multiplier"
+    },
+    {
+      "name": "VALUATION_TIME",
+      "description": "last period closing time of trade session in 'hh:mm:ss' format and in the UTC ENHANCEMENT#46658 Add EMIR Report"
+    },
+    {
+      "name": "NUMBER_WITH_ACCOUNT_CURRENCY_PRECISION",
+      "description": "Column type for getting value with account's currency precision. Example NUMBER_WITH_ACCOUNT_CURRENCY_PRECISION(assetId), where 0 - index column with asset id"
+    },
+    {
+      "name": "ACCOUNT_PROJECTED_BALANCE_FOR_ORDER",
+      "description": "Column type for get account's projected balance by order id. Example ACCOUNT_PROJECTED_BALANCE_FOR_ORDER(orederId), where odrderId - index column with order id"
+    },
+    {
+      "name": "LINK",
+      "description": "Column format link that opens in a new window"
+    },
+    {
+      "name": "TASK_EXECUTION_TYPE",
+      "description": "The column shows how the task was started. Available values for column: Manual, Timer. Data from database."
+    },
+    {
+      "name": "INSTR_ALIAS",
+      "description": "Instrument name"
+    },
+    {
+      "name": "INS_GROUP_ALIAS",
+      "description": "Instrument group name"
+    },
+    {
+      "name": "HIDDEN_USER_ID",
+      "description": "It was done for the \"Send users reports by email\" task. Whether this user id is allowed to send email. HIDDEN_USER_ID takes precedence over HIDDEN_ACCOUNT_ID"
+    },
+    {
+      "name": "HIDDEN_ACCOUNT_ID",
+      "description": "It was done for the \"Send users reports by email\" task. Whether this account id is allowed to send email. HIDDEN_USER_ID takes precedence over HIDDEN_ACCOUNT_ID"
+    },
+    {
+      "name": "PRICE_ROUNDED_TO_TICK_SIZE",
+      "description": "PRICE_ROUNDED_TO_TICK_SIZE({tradableinstrumentid index column})"
+    },
+    {
+      "name": "ACCOUNT_ID",
+      "description": "Account ID"
+    },
+    {
+      "name": "BIG_DECIMAL",
+      "description": "The number type with a support of null value"
+    }
+  ],
+  "reports": [
+    {
+      "id": 9950,
+      "name": "ALEXM Intraday performance report. No SL/TP",
+      "columns": [
+        "login",
+        "account",
+        "time",
+        "instrumentname",
+        "instrument_type",
+        "exchange",
+        "positionid",
+        "price",
+        "operation",
+        "positionstatus",
+        "tradeqty",
+        "tradeamount",
+        "stoploss",
+        "takeprofit",
+        "routename",
+        "profit",
+        "executionfee",
+        "strikeprice",
+        "expdate",
+        "maturitydate",
+        "underliername",
+        "underlierdate",
+        "tradableinstrumentid"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 121,
+      "name": "Account Performance Report",
+      "columns": [
+        "account",
+        "grosspl",
+        "netpl",
+        "tradevolume",
+        "fee",
+        "spread",
+        "swap",
+        "balance",
+        "currency",
+        "omnibusname"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 119,
+      "name": "Account Statement Report",
+      "columns": [
+        "accountname",
+        "login",
+        "groupname",
+        "gi.balance",
+        "blockedbalance",
+        "opengrosspnl",
+        "gi.cur_balance",
+        "unsettled_deposit",
+        "gi.available_funds",
+        "gi.margin_used",
+        "gi.available_margin",
+        "gi.margin_warning",
+        "gi.maintain_margin",
+        "gi.risk_lvl",
+        "gi.withdrawal_available",
+        "gi.cur_margin",
+        "gi.today_released_pnl",
+        "gi.stock_value",
+        "stock_value",
+        "accountcurrency",
+        "cash_balance",
+        "unsettled_cash",
+        "stock_req",
+        "option_value",
+        "stocks_liquidity",
+        "option_premium_req",
+        "collateral",
+        "omnibusname",
+        "waived_margin",
+        "warning_margin",
+        "warning_margin_req",
+        "margin_before_warning",
+        "stop_out_value",
+        "credit_value",
+        "accountid",
+        "blocked_for_fixed_income",
+        "fixed_income_value",
+        "fixed_income_orders_req"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 150,
+      "name": "Account operation report (settled and unsettled)",
+      "columns": [
+        "account",
+        "login",
+        "createdat",
+        "valuedate",
+        "accountoperationid",
+        "orderid",
+        "positionid",
+        "tradeid",
+        "operationtype",
+        "value",
+        "currency",
+        "comments",
+        "balance",
+        "omnibusname"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 153,
+      "name": "Account statement in defined currency report",
+      "requiresExtraFilter": true,
+      "probedWith": "assetName",
+      "columns": [
+        "accountname",
+        "login",
+        "cash_posted",
+        "value_nav",
+        "margin",
+        "pl_unrealized",
+        "gi.available_funds",
+        "omnibusname"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 2.1
+    },
+    {
+      "id": 48703,
+      "name": "Account_ops",
+      "columns": [
+        "accountoperationid",
+        "createdat_milliseconds",
+        "instrument",
+        "positionid",
+        "orderid",
+        "operationtypeid",
+        "type",
+        "change",
+        "amount",
+        "strategyid",
+        "note"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 105,
+      "name": "Active Orders Report",
+      "columns": [
+        "login",
+        "account",
+        "groupname",
+        "orderid",
+        "createdat",
+        "boundtoorderid",
+        "instrumentname",
+        "openclosebuysell",
+        "ordertype",
+        "price",
+        "stopprice",
+        "amount",
+        "filledamount",
+        "remaining_amount",
+        "fee",
+        "tif",
+        "updatedtime",
+        "routename",
+        "autotrade",
+        "terminaltype",
+        "tradingmode",
+        "omnibusname",
+        "exchange"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 40994,
+      "name": "Active Orders [mini] 20231025",
+      "columns": [
+        "login",
+        "account",
+        "groupname",
+        "orderid",
+        "createdat",
+        "instrumentname",
+        "openclosebuysell",
+        "ordertype",
+        "price",
+        "stopprice",
+        "amount",
+        "filledamount",
+        "remaining_amount",
+        "tif",
+        "updatedtime"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 202,
+      "name": "Auto-Investment History Report",
+      "columns": [
+        "userid",
+        "accountid",
+        "instrumentid",
+        "order_book_route",
+        "amount",
+        "currency",
+        "executiontype",
+        "order_book_datetime",
+        "clientpanelid",
+        "reason_for_rejection",
+        "orderid",
+        "validity",
+        "price"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 34487,
+      "name": "AutoLiquidation Report",
+      "requiresExtraFilter": true,
+      "probedWith": "accountId",
+      "columns": [
+        "account no.",
+        "actualtime",
+        "account name",
+        "margin available",
+        "inital margin",
+        "product type",
+        "main margin req.%",
+        "margin level after stop out",
+        "closing orderid",
+        "closing order  value",
+        "closing order filled status"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 1.1
+    },
+    {
+      "id": 161,
+      "name": "Available stations report",
+      "columns": [
+        "login",
+        "username",
+        "account",
+        "groupname",
+        "station"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 139,
+      "name": "Back Office Changes Report",
+      "columns": [
+        "time",
+        "userlogin",
+        "ip",
+        "terminal",
+        "objectid",
+        "description",
+        "actionname",
+        "change"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 115,
+      "name": "Balance Report (settled)",
+      "columns": [
+        "login",
+        "account",
+        "groupname",
+        "createdat",
+        "valuedate",
+        "accountoperationid",
+        "operation",
+        "orderid",
+        "debit",
+        "credit",
+        "balance",
+        "currency",
+        "basis",
+        "omnibusname"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 102,
+      "name": "Balance Summary Report",
+      "columns": [
+        "login",
+        "account",
+        "groupname",
+        "balance_before",
+        "trading_in",
+        "trading_out",
+        "deposit_with_unsettled",
+        "widthdraw",
+        "commission_out",
+        "swaps_in",
+        "swaps_out",
+        "interest",
+        "dividends",
+        "other_account_operations",
+        "total",
+        "balance_after",
+        "currency",
+        "omnibusname",
+        "pnl"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 116,
+      "name": "Balance by Instrument Report",
+      "columns": [
+        "instrument",
+        "balance.buy",
+        "balance.everbuy",
+        "balance.sell",
+        "balance.eversell",
+        "balance.amount",
+        "balance.grosspl",
+        "balance.netvalue",
+        "balance.netexposure",
+        "balance.grossvalue",
+        "balance.grossexposure",
+        "omnibusname"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 186,
+      "name": "Broker message reactions",
+      "columns": [
+        "userid",
+        "brokermessagename",
+        "datetime",
+        "custombuttontitle"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 6563,
+      "name": "Call Margin (PING)",
+      "columns": [
+        "accountname",
+        "gi.balance",
+        "opengrosspnl",
+        "gi.cur_balance",
+        "gi.available_funds",
+        "gi.margin_used",
+        "gi.available_margin",
+        "gi.margin_warning",
+        "collateral",
+        "omnibusname",
+        "waived_margin",
+        "warning_margin",
+        "warning_margin_req",
+        "margin_before_warning",
+        "stop_out_value",
+        "credit_value",
+        "accountid",
+        "blocked_for_fixed_income",
+        "fixed_income_value",
+        "fixed_income_orders_req"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 109,
+      "name": "Cash Deposit And Withdrawal Report",
+      "columns": [
+        "login",
+        "account",
+        "groupname",
+        "createdat",
+        "accountoperationid",
+        "operationtype",
+        "basis",
+        "sum",
+        "creator",
+        "currency",
+        "omnibusname"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 6564,
+      "name": "Client Activity Summary report (PING)",
+      "columns": [
+        "opening balance",
+        "net realized p/l",
+        "deposit",
+        "widthdraw",
+        "commission_out",
+        "swaps_in",
+        "swaps_out",
+        "adjustment",
+        "closing balance",
+        "openpnl",
+        "closingequity"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 174,
+      "name": "Client app error logs",
+      "columns": [
+        "messagetime",
+        "login",
+        "terminaltype",
+        "version",
+        "code",
+        "header",
+        "msgbody"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 8833,
+      "name": "Client app error logs (New_Sobol)",
+      "columns": [
+        "messagetime",
+        "login",
+        "terminaltype",
+        "content"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.6
+    },
+    {
+      "id": 160,
+      "name": "Connections Event History",
+      "columns": [
+        "actualtime",
+        "login",
+        "event",
+        "sessionid",
+        "ipaddress",
+        "nodename",
+        "sessiontype",
+        "terminaltype",
+        "branding",
+        "terminalversion",
+        "deviceid",
+        "appinstallid",
+        "comments"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 124,
+      "name": "Currency summary exposure",
+      "columns": [
+        "currency",
+        "balance.amount",
+        "route",
+        "balance.profit",
+        "balance.exposure",
+        "omnibusname"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 195,
+      "name": "Current risk rules values",
+      "columns": [
+        "accountname",
+        "login",
+        "groupname",
+        "accountcurrency",
+        "projected_balance",
+        "current_daily_loss",
+        "current_weekly_loss",
+        "current_unrealized_loss",
+        "current_daily_profit",
+        "current_total_position_qty",
+        "current_positions",
+        "current_pending_orders",
+        "current_orders_count_per_day",
+        "calculated_relative_daily_loss_limit",
+        "current_exposure"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 47604,
+      "name": "Daily balance summary",
+      "columns": [
+        "account",
+        "balance_before",
+        "trading_in",
+        "trading_out",
+        "deposit_with_unsettled",
+        "widthdraw",
+        "commission_out",
+        "swaps_in",
+        "swaps_out",
+        "dividends",
+        "other_account_operations",
+        "total",
+        "balance_after"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 39188,
+      "name": "Daily risk rule trigger",
+      "columns": [
+        "actualtime",
+        "accountid",
+        "name",
+        "text"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 178,
+      "name": "Daily short trading by instrument report",
+      "columns": [
+        "instrument",
+        "tsr_route",
+        "instrument_group",
+        "exchange",
+        "start_of_day_borrowed_qty",
+        "utilized_qty",
+        "available_qty",
+        "borrowed_fee"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 180,
+      "name": "Day trader pattern report",
+      "columns": [
+        "login",
+        "accountname",
+        "accountstatus",
+        "dtp.total_trades_number",
+        "dtp.cur_day_trades_number",
+        "dtp.available_day_trades",
+        "dtp.cur_day_trades_percent",
+        "dtp.protection_triggered"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 183,
+      "name": "EOD Margin call report",
+      "columns": [
+        "login",
+        "accountname",
+        "margincalldayscount",
+        "stopout"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 42700,
+      "name": "EOD Prices",
+      "columns": [
+        "exchange",
+        "ticket",
+        "bid",
+        "ask",
+        "last",
+        "bid_date",
+        "ask_date",
+        "last_date",
+        "reported_time"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 104,
+      "name": "Event History Report",
+      "columns": [
+        "actualtime",
+        "sender",
+        "recipient",
+        "accountid",
+        "clientpanelname",
+        "branding",
+        "message"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 107,
+      "name": "Executed Orders Report",
+      "columns": [
+        "login",
+        "account",
+        "groupname",
+        "orderid",
+        "createdat",
+        "boundtoorderid",
+        "positionid",
+        "instrumentname",
+        "openclosebuysell",
+        "ordertype",
+        "price",
+        "stopprice",
+        "actualprice",
+        "executedat",
+        "amount",
+        "executionfee",
+        "tif",
+        "updatedtime",
+        "autotrade",
+        "terminaltype",
+        "tradingmode",
+        "omnibusname",
+        "exchange"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 158,
+      "name": "Expected funds settlement",
+      "columns": [
+        "login",
+        "account",
+        "usergroup",
+        "dayt",
+        "dayt1",
+        "dayt2",
+        "dayt3",
+        "dayt4",
+        "currency"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 159,
+      "name": "Expected funds settlement by user group",
+      "columns": [
+        "usergroup",
+        "dayt",
+        "dayt1",
+        "dayt2",
+        "dayt3",
+        "dayt4",
+        "currency"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 110,
+      "name": "Fees Report",
+      "columns": [
+        "login",
+        "account",
+        "groupname",
+        "createdat",
+        "accountoperationid",
+        "operationtype",
+        "orderid",
+        "basis",
+        "executionprice",
+        "instrumentname",
+        "ordertype",
+        "amount",
+        "sum",
+        "currency",
+        "omnibusname"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 175,
+      "name": "Indicate Partner report",
+      "columns": [
+        "messagetime",
+        "login",
+        "terminaltype",
+        "code"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 128,
+      "name": "Instrument Statistic Report",
+      "columns": [
+        "instrument",
+        "instrumentgroup",
+        "route",
+        "buy_trades",
+        "sell_trades",
+        "buy_trade_amount",
+        "sell_trade_amount",
+        "total_traded_amount",
+        "pnl",
+        "swap",
+        "spread",
+        "currency",
+        "omnibusname",
+        "exchange"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 42195,
+      "name": "Instruments Settings report",
+      "columns": [
+        "instrument name",
+        "isin code",
+        "base currency",
+        "quote currency",
+        "instrument description",
+        "symbol_type",
+        "exchange",
+        "lotsize",
+        "lotstep",
+        "minlot"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 35091,
+      "name": "Loss counters",
+      "columns": [
+        "accountid",
+        "dailyloss",
+        "weeklyloss"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 188,
+      "name": "MAM account summary",
+      "columns": [
+        "account_name",
+        "tradableinstrument_name",
+        "date",
+        "operationtype_name",
+        "accountoperationid",
+        "open_price",
+        "close_price",
+        "amount",
+        "quantity",
+        "currency_name",
+        "side"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 125,
+      "name": "Net Open Positions",
+      "columns": [
+        "usergroup",
+        "instrumentgroup",
+        "instrument",
+        "type",
+        "quantity",
+        "currency",
+        "tradingmode",
+        "omnibusname",
+        "exchange"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 111,
+      "name": "New Users Report",
+      "columns": [
+        "createdat",
+        "login",
+        "username",
+        "groupname",
+        "phone",
+        "email",
+        "phonepassword",
+        "irdnumber",
+        "address",
+        "locked",
+        "daystillexpiration",
+        "balance"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 36804,
+      "name": "New created instruments",
+      "columns": [
+        "time",
+        "name",
+        "description",
+        "exchange",
+        "group"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 36894,
+      "name": "No responce_task",
+      "columns": [
+        "taskname"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 136,
+      "name": "Not Filled Orders Report",
+      "columns": [
+        "login",
+        "account",
+        "orderid",
+        "createdat",
+        "boundtoorderid",
+        "positionid",
+        "instrumentname",
+        "openclosebuysell",
+        "ordertype",
+        "price",
+        "stopprice",
+        "amount",
+        "filledamount",
+        "tif",
+        "updatedtime",
+        "routename",
+        "pendingorderscount",
+        "tradingmode",
+        "exchange"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 177,
+      "name": "Not active orders report",
+      "columns": [
+        "id",
+        "tradableinstrumentid",
+        "routeid",
+        "account",
+        "amount",
+        "side",
+        "type",
+        "status",
+        "filledamount",
+        "averagefilledprice",
+        "price",
+        "stopprice",
+        "isclose",
+        "positionid",
+        "tif",
+        "expiredate",
+        "updatetime",
+        "comment",
+        "createdat",
+        "slpricetype",
+        "slprice",
+        "tpprice",
+        "tppricetype",
+        "strategyid",
+        "grosspnl",
+        "netpnl",
+        "executionfee",
+        "usercomment"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 205,
+      "name": "Not active orders report for Client API",
+      "columns": [
+        "id",
+        "tradableinstrumentid",
+        "routeid",
+        "amount",
+        "side",
+        "type",
+        "status",
+        "filledamount",
+        "averagefilledprice",
+        "price",
+        "stopprice",
+        "isclose",
+        "positionid",
+        "tif",
+        "expiredate",
+        "updatetime",
+        "comments",
+        "createdat",
+        "slpricetype",
+        "slprice",
+        "tpprice",
+        "tppricetype",
+        "strategyid",
+        "usercomment",
+        "isoth"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.6
+    },
+    {
+      "id": 172,
+      "name": "Omnibus account statement report",
+      "columns": [
+        "omnibusname",
+        "gi.balance",
+        "unsettled_cash",
+        "unsettled_loss",
+        "unsettled_profit",
+        "gi.available_funds",
+        "blockedbalance",
+        "cash_balance",
+        "opengrosspnl",
+        "gi.today_released_pnl",
+        "accountcurrency"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 173,
+      "name": "Omnibus accounts statistics",
+      "columns": [
+        "omnibusname",
+        "omnibuscurrency",
+        "instrumentname",
+        "routename",
+        "orders_number",
+        "buy_orders",
+        "sell_orders",
+        "buy_amounts",
+        "sell_amounts",
+        "positions_number",
+        "long_positions",
+        "short_positions",
+        "long_pos_amount",
+        "short_pos_amount",
+        "net_pos_amount",
+        "average_long",
+        "average_short",
+        "grosspl"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 114,
+      "name": "Open Positions Report",
+      "columns": [
+        "positionid",
+        "account",
+        "login",
+        "groupname",
+        "instrumentname",
+        "instrumentgroup",
+        "amount",
+        "openprice",
+        "buyselltype",
+        "opentime",
+        "currentprice",
+        "stoploss",
+        "sllimitprice",
+        "takeprofit",
+        "profit",
+        "swaps",
+        "comission",
+        "currency",
+        "routename",
+        "margin",
+        "autotrade",
+        "terminaltype",
+        "tradingmode",
+        "omnibusname",
+        "exchange"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 187,
+      "name": "Open Positions Report (USD Exposure)",
+      "columns": [
+        "positionid",
+        "account",
+        "login",
+        "groupname",
+        "instrumentname",
+        "instrumentgroup",
+        "amount",
+        "openprice",
+        "buyselltype",
+        "opentime",
+        "currentprice",
+        "stoploss",
+        "sllimitprice",
+        "takeprofit",
+        "profit",
+        "swaps",
+        "comission",
+        "currency",
+        "routename",
+        "margin",
+        "autotrade",
+        "terminaltype",
+        "tradingmode",
+        "omnibusname",
+        "exchange",
+        "usd_exposure"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 157,
+      "name": "Open Positions Report (no m.c. filter)",
+      "columns": [
+        "positionid",
+        "account",
+        "login",
+        "groupname",
+        "instrumentname",
+        "instrumentgroup",
+        "amount",
+        "openprice",
+        "open_cross_price",
+        "buyselltype",
+        "opentime",
+        "currentprice",
+        "stoploss",
+        "sllimitprice",
+        "takeprofit",
+        "profit",
+        "swaps",
+        "comission",
+        "currency_account",
+        "currency_instrument_quoting",
+        "routename",
+        "margin",
+        "autotrade",
+        "terminaltype",
+        "tradingmode",
+        "omnibusname",
+        "exchange"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 203,
+      "name": "Open Positions Report (with m.c. filter)",
+      "columns": [
+        "positionid",
+        "account",
+        "login",
+        "groupname",
+        "instrumentname",
+        "instrumentgroup",
+        "amount",
+        "openprice",
+        "buyselltype",
+        "opentime",
+        "currentprice",
+        "stoploss",
+        "sllimitprice",
+        "takeprofit",
+        "profit",
+        "swaps",
+        "comission",
+        "currency",
+        "routename",
+        "margin",
+        "autotrade",
+        "terminaltype",
+        "tradingmode",
+        "omnibusname",
+        "exchange"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 181,
+      "name": "Open Positions Report with instrument info",
+      "columns": [
+        "positionid",
+        "account",
+        "login",
+        "groupname",
+        "alias",
+        "instrument_name",
+        "instrumentgroup",
+        "amount",
+        "openprice",
+        "buyselltype",
+        "opentime",
+        "currentprice",
+        "stoploss",
+        "sllimitprice",
+        "takeprofit",
+        "profit",
+        "swaps",
+        "comission",
+        "currency",
+        "routename",
+        "margin",
+        "autotrade",
+        "terminaltype",
+        "tradingmode",
+        "omnibusname",
+        "exchange",
+        "instrument_type",
+        "isin"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 182,
+      "name": "Open Positions Report with instrument info(no m.c. filter)",
+      "columns": [
+        "positionid",
+        "account",
+        "login",
+        "groupname",
+        "alias",
+        "instrument_name",
+        "instrumentgroup",
+        "amount",
+        "openprice",
+        "open_cross_price",
+        "buyselltype",
+        "opentime",
+        "currentprice",
+        "stoploss",
+        "sllimitprice",
+        "takeprofit",
+        "profit",
+        "swaps",
+        "comission",
+        "currency_account",
+        "currency_instrument_quoting",
+        "routename",
+        "margin",
+        "autotrade",
+        "terminaltype",
+        "tradingmode",
+        "omnibusname",
+        "exchange",
+        "instrument_type",
+        "isin"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 151,
+      "name": "Order Book History",
+      "columns": [
+        "order_book_account",
+        "order_book_symbol",
+        "order_book_side",
+        "order_book_event",
+        "order_book_orderid",
+        "order_book_type",
+        "order_book_price",
+        "order_book_stop_price",
+        "order_book_quantity",
+        "order_book_disclosed_qty",
+        "order_book_route",
+        "order_book_datetime",
+        "order_book_tif",
+        "order_book_modified_by",
+        "order_book_login",
+        "order_book_symbol_type",
+        "expyear",
+        "expmonth",
+        "expday",
+        "derivativetype",
+        "strikeprice",
+        "tradingmode",
+        "omnibusname",
+        "exchange",
+        "leverage"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 4393,
+      "name": "Order Book History (OLD)",
+      "columns": [
+        "order_book_account",
+        "order_book_symbol",
+        "order_book_side",
+        "order_book_event",
+        "order_book_orderid",
+        "order_book_type",
+        "order_book_price",
+        "order_book_stop_price",
+        "order_book_quantity",
+        "order_book_disclosed_qty",
+        "order_book_route",
+        "order_book_datetime",
+        "order_book_tif",
+        "order_book_modified_by",
+        "order_book_login",
+        "order_book_symbol_type",
+        "expyear",
+        "expmonth",
+        "expday",
+        "derivativetype",
+        "strikeprice",
+        "tradingmode"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 141,
+      "name": "Order Book Report",
+      "columns": [
+        "order_book_account",
+        "order_book_symbol",
+        "order_book_side",
+        "order_book_event",
+        "order_book_orderid",
+        "order_book_type",
+        "order_book_price",
+        "order_book_stop_price",
+        "order_book_quantity",
+        "order_book_disclosed_qty",
+        "order_book_route",
+        "order_book_datetime",
+        "order_book_tif",
+        "order_book_modified_by",
+        "order_book_login",
+        "order_book_symbol_type",
+        "expyear",
+        "expmonth",
+        "expday",
+        "derivativetype",
+        "strikeprice",
+        "order_book_bought",
+        "order_book_sold",
+        "ordertime",
+        "tradingmode",
+        "external_order_id",
+        "tradableinstrumentid",
+        "omnibusname",
+        "exchange",
+        "description",
+        "leverage",
+        "lot_size",
+        "counter_currency"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 142,
+      "name": "Order Book Report BO",
+      "columns": [
+        "order_book_account",
+        "order_book_symbol",
+        "order_book_side",
+        "order_book_event",
+        "order_book_orderid",
+        "order_book_type",
+        "order_book_price",
+        "order_book_stop_price",
+        "order_book_quantity",
+        "order_book_disclosed_qty",
+        "order_book_route",
+        "order_book_datetime",
+        "order_book_tif",
+        "order_book_modified_by",
+        "order_book_login",
+        "order_book_symbol_type",
+        "expyear",
+        "expmonth",
+        "expday",
+        "derivativetype",
+        "strikeprice",
+        "order_book_bought",
+        "order_book_sold",
+        "ordertime",
+        "tradingmode",
+        "external_order_id",
+        "tradableinstrumentid",
+        "omnibusname",
+        "exchange",
+        "description",
+        "leverage"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 112,
+      "name": "Order History Report",
+      "columns": [
+        "accname",
+        "instrumentgroup",
+        "instrumentname",
+        "action",
+        "event",
+        "orderid",
+        "type",
+        "price",
+        "stopprice",
+        "amount",
+        "route",
+        "actualtime",
+        "tif",
+        "trader",
+        "autotrade",
+        "terminaltype",
+        "expyear",
+        "expmonth",
+        "expday",
+        "derivativetype",
+        "strikeprice",
+        "ordertime",
+        "tradingmode",
+        "omnibusname",
+        "exchange",
+        "leverage",
+        "usercomment"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 37390,
+      "name": "Order book with sl tp",
+      "columns": [
+        "order_book_account",
+        "order_book_symbol",
+        "order_book_side",
+        "order_book_event",
+        "order_book_orderid",
+        "order_book_type",
+        "order_book_price",
+        "order_book_stop_price",
+        "order_book_quantity",
+        "order_book_disclosed_qty",
+        "order_book_route",
+        "order_book_datetime",
+        "order_book_tif",
+        "order_book_modified_by",
+        "order_book_login",
+        "order_book_symbol_type",
+        "expyear",
+        "expmonth",
+        "expday",
+        "derivativetype",
+        "strikeprice",
+        "tradingmode",
+        "omnibusname",
+        "exchange",
+        "positionid",
+        "slpricetype",
+        "slprice",
+        "tpprice",
+        "tppricetype"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 192,
+      "name": "Order history report with app ID",
+      "columns": [
+        "ordertimestamp",
+        "orderno",
+        "symbol_contract_details",
+        "ordertype",
+        "tradeflag",
+        "channel",
+        "ip",
+        "client_useragent",
+        "appinstallid"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 194,
+      "name": "Orders routing balance",
+      "columns": [
+        "groupname",
+        "orders_routing_routename",
+        "routename",
+        "instrument",
+        "balance"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 193,
+      "name": "Orders routing positions history",
+      "columns": [
+        "positionid",
+        "orderid",
+        "extorderid",
+        "contract_name",
+        "route_name",
+        "price",
+        "amount",
+        "ordertype"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 155,
+      "name": "Panel Usage Statistic",
+      "columns": [
+        "clientpanelname",
+        "clientpanelid",
+        "client_count",
+        "percentage"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 149,
+      "name": "Performance history report",
+      "columns": [
+        "login",
+        "account",
+        "time",
+        "instrumentname",
+        "instrument_type",
+        "positionid",
+        "operation",
+        "positionstatus",
+        "tradeqty",
+        "routename",
+        "profit",
+        "executionfee",
+        "expdate",
+        "strikeprice",
+        "tradableinstrumentid"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.5
+    },
+    {
+      "id": 179,
+      "name": "Position exposure report",
+      "columns": [
+        "balance.amount",
+        "position.ccy",
+        "balance.exposure",
+        "account.ccy"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 42798,
+      "name": "Position history for Hedging Symbols",
+      "columns": [
+        "account",
+        "positionid",
+        "orderid",
+        "instrumentname",
+        "symbol_type",
+        "operation",
+        "tradeamount",
+        "positionamount",
+        "opentime",
+        "closetime",
+        "openprice",
+        "closeprice",
+        "type",
+        "positionstatus",
+        "profit",
+        "commission",
+        "currency",
+        "closed comment"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 42196,
+      "name": "Position history for NOT Hedging Symbols",
+      "columns": [
+        "account",
+        "positionid",
+        "orderid",
+        "instrumentname",
+        "symbol_type",
+        "operation",
+        "tradeamount",
+        "positionamount",
+        "opentime",
+        "closetime",
+        "openprice",
+        "closeprice",
+        "type",
+        "positionstatus",
+        "profit",
+        "commission",
+        "currency",
+        "closed comment"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 49421,
+      "name": "Position history simplified",
+      "columns": [
+        "time",
+        "account",
+        "instrumentname",
+        "positionid",
+        "tradeid",
+        "openprice",
+        "operation",
+        "type",
+        "positionstatus",
+        "tradeamount",
+        "positionamount",
+        "price",
+        "gross p&l"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 127,
+      "name": "Positions History Report",
+      "columns": [
+        "time",
+        "login",
+        "account",
+        "sender",
+        "instrumentname",
+        "positionid",
+        "orderid",
+        "tradeid",
+        "externalid",
+        "opentime",
+        "openprice",
+        "operation",
+        "type",
+        "positionstatus",
+        "tradeamount",
+        "positionamount",
+        "price",
+        "extprice",
+        "crossprice",
+        "stoploss",
+        "sllimitprice",
+        "takeprofit",
+        "routename",
+        "swaps",
+        "executionfee",
+        "totalfee",
+        "profit",
+        "spreadpnl",
+        "balance",
+        "valuedate",
+        "expiredate",
+        "autotrade",
+        "terminaltype",
+        "tradingmode",
+        "optionexercisestatus",
+        "omnibusname",
+        "exchange"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.6
+    },
+    {
+      "id": 126,
+      "name": "Positions On Chosen Moment Report",
+      "columns": [
+        "login",
+        "account",
+        "positionid",
+        "instrumentname",
+        "opentime",
+        "operation",
+        "openprice",
+        "positionamount",
+        "route",
+        "swaps",
+        "autotrade",
+        "terminaltype",
+        "tradingmode",
+        "exchange"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 50468,
+      "name": "Push tokens report",
+      "columns": [
+        "login",
+        "groupname",
+        "token"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 34490,
+      "name": "RR trigger",
+      "columns": [
+        "actualtime",
+        "accountid",
+        "text"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 42697,
+      "name": "Rates Report",
+      "columns": [
+        "instrumentname",
+        "currentprice",
+        "routename",
+        "symbol"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 50680,
+      "name": "Rejected orders report",
+      "columns": [
+        "actualtime",
+        "account",
+        "orderid",
+        "instrumentname",
+        "order_book_side",
+        "ordertype",
+        "route",
+        "reason"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 108,
+      "name": "Removed Orders Report",
+      "columns": [
+        "login",
+        "account",
+        "groupname",
+        "orderid",
+        "createdat",
+        "boundtoorderid",
+        "instrumentname",
+        "openclosebuysell",
+        "ordertype",
+        "price",
+        "stopprice",
+        "amount",
+        "tif",
+        "removedtime",
+        "autotrade",
+        "terminaltype",
+        "tradingmode",
+        "omnibusname",
+        "exchange"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 133,
+      "name": "Request Account Operation Report",
+      "columns": [
+        "raor_requestid",
+        "raor_operationtype",
+        "raor_operationtime",
+        "raor_approvetime",
+        "raor_administrator",
+        "raor_fromaccount",
+        "raor_balance",
+        "raor_sum",
+        "raor_commission_percent",
+        "raor_sum_without_commission",
+        "raor_toaccount",
+        "raor_counterbalance",
+        "raor_countersum",
+        "raor_crossprice",
+        "raor_state",
+        "raor_basis",
+        "omnibusname"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 148,
+      "name": "Route Trading Statistics Report",
+      "slow": true,
+      "ok": false,
+      "error": "TimeoutError: The read operation timed out (retry: The read operation timed out)",
+      "probeSeconds": 145.4
+    },
+    {
+      "id": 129,
+      "name": "Route Visibility Report",
+      "columns": [
+        "login",
+        "firstname",
+        "lastname"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 122,
+      "name": "Scheduler Log Report",
+      "columns": [
+        "actualtime",
+        "tasktypename",
+        "taskid",
+        "taskname",
+        "terminaltype",
+        "executiontype",
+        "login",
+        "userip",
+        "serverip",
+        "status"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 137,
+      "name": "Sharia Operations Report",
+      "columns": [
+        "login",
+        "name",
+        "credit",
+        "debit",
+        "total",
+        "omnibusname"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 184,
+      "name": "Snapshot requests",
+      "columns": [
+        "login",
+        "limit",
+        "executed_requests"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 191,
+      "name": "Snapshot requests by user",
+      "columns": [
+        "login",
+        "datetime",
+        "market",
+        "bidprice",
+        "askprice",
+        "lastprice",
+        "highprice",
+        "lowprice",
+        "instrument"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 176,
+      "name": "Statement report",
+      "columns": [
+        "createdat",
+        "operationtype",
+        "accountoperationid",
+        "openprice",
+        "closeprice",
+        "opentime",
+        "amount",
+        "quantity",
+        "tradableinstrumentid",
+        "instrumentname",
+        "accountid",
+        "tradeid",
+        "positionid",
+        "operationtypeid",
+        "details"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 49769,
+      "name": "Statement report 1(copy)",
+      "columns": [
+        "account",
+        "instrumentname",
+        "createdat",
+        "valuedate",
+        "operationtype",
+        "accountoperationid",
+        "openprice",
+        "closeprice",
+        "opentime",
+        "amount",
+        "quantity",
+        "currency",
+        "tradeid",
+        "positionid",
+        "instrument_type",
+        "tradingexchange",
+        "operationtypeid",
+        "details"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 40798,
+      "name": "Statement report(copy)",
+      "columns": [
+        "account",
+        "instrumentname",
+        "createdat",
+        "valuedate",
+        "operationtype",
+        "accountoperationid",
+        "openprice",
+        "closeprice",
+        "opentime",
+        "amount",
+        "quantity",
+        "currency",
+        "crossprice",
+        "positionid"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 189,
+      "name": "Subscriptions report",
+      "columns": [
+        "account number",
+        "account_name",
+        "subscription",
+        "event date",
+        "event"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 113,
+      "name": "Summary Report",
+      "columns": [
+        "login",
+        "account",
+        "groupname",
+        "balance_before",
+        "trading_in",
+        "trading_out",
+        "deposit_with_unsettled",
+        "widthdraw",
+        "commission_out",
+        "swaps_in",
+        "swaps_out",
+        "interest",
+        "dividends",
+        "other_account_operations",
+        "total",
+        "balance_after",
+        "currency",
+        "omnibusname",
+        "pnl"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 117,
+      "name": "Trades Report",
+      "columns": [
+        "account",
+        "instrumentname",
+        "orderid",
+        "tradeid",
+        "externalid",
+        "routename",
+        "operation",
+        "time",
+        "price",
+        "amount",
+        "crossprice",
+        "profit",
+        "executionfee",
+        "extprice",
+        "tradevolume",
+        "purchaseprice",
+        "exchange",
+        "type",
+        "rebates",
+        "expyear",
+        "expmonth",
+        "expday",
+        "derivativetype",
+        "strikeprice",
+        "external_order_id",
+        "trades_bought",
+        "trades_sold",
+        "symbol_type",
+        "tradingmode",
+        "tradableinstrumentid",
+        "clientorderid",
+        "execvenue",
+        "description",
+        "leverage",
+        "lot_size",
+        "counter_currency"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 118,
+      "name": "Trades Report BO",
+      "columns": [
+        "account",
+        "sender",
+        "instrumentname",
+        "orderid",
+        "tradeid",
+        "externalid",
+        "routename",
+        "operation",
+        "time",
+        "price",
+        "amount",
+        "crossprice",
+        "profit",
+        "executionfee",
+        "extprice",
+        "tradevolume",
+        "purchaseprice",
+        "exchange",
+        "type",
+        "valuedate",
+        "autotrade",
+        "terminaltype",
+        "rebates",
+        "expyear",
+        "expmonth",
+        "expday",
+        "derivativetype",
+        "strikeprice",
+        "external_order_id",
+        "trades_bought",
+        "trades_sold",
+        "symbol_type",
+        "tradingmode",
+        "tradableinstrumentid",
+        "omnibusname",
+        "clientorderid",
+        "execvenue",
+        "description"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 143,
+      "name": "Trades report by instrument",
+      "columns": [
+        "login",
+        "accname",
+        "symbol",
+        "datetime",
+        "exchange",
+        "quantity",
+        "price",
+        "proceeds",
+        "comtax",
+        "realizedpnl",
+        "code",
+        "tradeid",
+        "positionid",
+        "tradingmode"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.4
+    },
+    {
+      "id": 190,
+      "name": "User password change audit",
+      "columns": [
+        "changedat",
+        "password changed by user",
+        "ip",
+        "terminal",
+        "changedetails",
+        "password changed for user"
+      ],
+      "probeRows": 0,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 106,
+      "name": "Users Report",
+      "columns": [
+        "createdat",
+        "login",
+        "username",
+        "account",
+        "groupname",
+        "email",
+        "phone",
+        "phonepassword",
+        "locked",
+        "daystillexpiration",
+        "balance",
+        "currency",
+        "omnibusname"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 37394,
+      "name": "Vlad_Test",
+      "columns": [
+        "routeid",
+        "instrumentid",
+        "ticker",
+        "comments",
+        "istrading",
+        "pricemultiplier",
+        "lastmodified"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    },
+    {
+      "id": 34796,
+      "name": "pg_stat_activity",
+      "columns": [
+        "pid",
+        "application_name",
+        "query_start",
+        "query"
+      ],
+      "probeRows": 1,
+      "ok": true,
+      "probeSeconds": 0.3
+    }
+  ]
+}

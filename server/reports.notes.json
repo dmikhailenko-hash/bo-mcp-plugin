@@ -1,0 +1,148 @@
+{
+  "_comment": [
+    "Hand-written analysis of individual reports, merged over reports.catalog.json",
+    "by bo_explain_report. Kept in a separate file so that rebuilding the catalogue",
+    "with build_report_catalog.py never destroys it.",
+    "",
+    "Per report, all fields optional:",
+    "  summary     one or two sentences: what one row represents",
+    "  grain       what a single row is",
+    "  formulas    column relationships verified against live data",
+    "  columns     per-column explanations",
+    "  filters     query parameters that matter for this report",
+    "  warnings    traps a broker must know about before trusting the output",
+    "  seeAlso     ids of reports that are easily confused with this one"
+  ],
+
+  "104": {
+    "summary": "Human-readable audit log of the trading engine: who did what to which order or position, from which panel, and what the server answered.",
+    "grain": "One row per event. A single order typically produces several rows ($client_request, $order_placed, $order_filled).",
+    "columns": {
+      "actualtime": "Event time, DD-MM-YYYY HH:mm:ss.SSS, millisecond precision.",
+      "sender": "Who initiated it: a client login, or 'System' when the server did (a limit order filling, an auto-close).",
+      "recipient": "Who the event is addressed to, normally the account owner.",
+      "accountid": "Numeric account id, not the account name.",
+      "clientpanelname": "Origin of the action: 'WEB: OE', 'WEB: Positions Panel Hot Buttons', 'TV Trading platform: OE', 'Mob: Auto-invest \"IOS\"', 'Server'.",
+      "branding": "Brand tenant. Often empty for system-generated events.",
+      "message": "The event text, with $-markers."
+    },
+    "messageMarkers": {
+      "$client_request": "A request from the client; followed by $open_position or $close_position.",
+      "$order_placed": "Order accepted and working.",
+      "$order_filled": "Executed. Carries 'extOrder #' (the id on the external route) and 'crossPrice=' (the conversion rate).",
+      "$order_canceled": "Cancelled.",
+      "$order_wait_cancel_confirm": "Cancellation sent, waiting for the route to confirm.",
+      "$order_wait_replace_confirm": "Modification sent, waiting for confirmation.",
+      "$order_refused": "Rejected. The reason is written into the same message.",
+      "$broker_create_order": "Order created by the Back Office, not by the client.",
+      "$trailing_offset": "Trailing stop distance."
+    },
+    "filters": "login, accountId, userGroupId, orderId, positionId, instrumentName, clientType, eventType (10 Margincall, 14 Rollback, 4 order, 1 message, 20 positionOpened).",
+    "warnings": [
+      "isTotal=true returns total: null. There is nothing numeric to sum in a text log.",
+      "Without startDate/endDate the report returns the current day only.",
+      "The output is bulky: a week-long window easily exceeds the 20000-character response limit. Narrow by time, or filter by login or accountId."
+    ],
+    "seeAlso": [160]
+  },
+
+  "160": {
+    "summary": "Connection events only: logins, logouts and failed logins. Not the trading event log.",
+    "grain": "One row per connection event.",
+    "filters": "connectionEventType (100 Login, 101 Logout, 102 loginFailed), connectionType (1 QUOTE, 2 TRADE, 4 HISTORY, 8 NEWS), hostAddress, clientType, appInstallID.",
+    "seeAlso": [104]
+  },
+
+  "117": {
+    "summary": "Executions. Every fill that happened on the venue, with the money converted into the account currency.",
+    "grain": "One row per trade (execution), not per order. A partially filled order produces several rows sharing one orderid with different tradeid.",
+    "formulas": [
+      "tradevolume   = amount x lot_size x price   (expressed in counter_currency)",
+      "purchaseprice = tradevolume x crossprice    (expressed in the account currency)"
+    ],
+    "formulaExample": "AUD/CAD: 0.04 lots x 100000 x 0.99213 = 3968.52 CAD; 3968.52 x 0.71898996 = 2853.33 USD.",
+    "columns": {
+      "orderid": "The order this fill belongs to.",
+      "tradeid": "The fill itself. This is the unique key of the row.",
+      "crossprice": "Conversion rate from counter_currency into the account currency. 1.00 for pairs already quoted in the account currency.",
+      "profit": "Realised P&L. Zero on opening trades - profit only materialises when a position is closed.",
+      "executionfee": "Fee charged on this fill.",
+      "rebates": "Rebate credited on this fill.",
+      "tradevolume": "Notional in the counter currency.",
+      "purchaseprice": "The same notional converted into the account currency.",
+      "trades_bought": "The bought leg as text, e.g. '4000 AUD'.",
+      "trades_sold": "The sold leg as text, e.g. '3968.52 CAD'.",
+      "lot_size": "Units per lot: 100000 for forex, 1 for equities.",
+      "extprice": "Price reported by the external route, for comparison against the client price."
+    },
+    "warnings": [
+      "With isTotal=true the total for 'amount' is meaningless: it adds forex lots to share counts. A window with two 0.04-lot forex trades and one 276-share equity trade totals 276.08, which is not a quantity of anything. Never show that total to a broker.",
+      "The total for 'purchaseprice' IS meaningful, because every row is already converted into the account currency.",
+      "On the demo stand these columns come back empty: leverage, execvenue, external_order_id, derivativetype."
+    ],
+    "seeAlso": [118, 143]
+  },
+
+  "141": {
+    "summary": "Order lifecycle. Every state an order passed through, rather than a list of orders.",
+    "grain": "One row per order state change. The state is in order_book_event (Filled, Cancelled, ...).",
+    "columns": {
+      "ordertime": "When the order was created.",
+      "order_book_datetime": "When this particular event happened. The gap between the two is how long the order lived up to that event.",
+      "order_book_event": "The state reached: Filled, Cancelled, and so on.",
+      "order_book_modified_by": "Who caused the change. EMPTY MEANS THE SYSTEM DID IT, not a person.",
+      "order_book_tif": "Time in force. A 'Day' order cancelled at exactly 00:00:00 with an empty modified_by is the automatic end-of-day expiry, not a client action."
+    },
+    "warnings": [
+      "order_book_account and order_book_login fall back to the numeric id when no name is set, so the same logical account can appear as both a name and a number. Do not group by these columns.",
+      "isTotal=true returns total: null."
+    ],
+    "seeAlso": [142, 151, 4393, 37390]
+  },
+
+  "119": {
+    "summary": "Current financial state of every account: balance, margin, exposure, withdrawal room. 38 columns of margin arithmetic.",
+    "grain": "One row per account.",
+    "columns": {
+      "gi.*": "The 'gi.' prefix means general info - live values read from the trading engine (gi.balance, gi.available_funds, gi.margin_used, gi.risk_lvl, gi.withdrawal_available).",
+      "gi.balance": "The cash part of the balance.",
+      "gi.cur_balance": "Balance including revaluation of open positions. gi.cur_balance - gi.balance is approximately stock_value + opengrosspnl.",
+      "cash_balance": "Database-side cash figure, no 'gi.' prefix, so not live from the engine.",
+      "waived_margin": "Comes back as the STRING 'N/A', not a number. Parsing it as numeric will fail."
+    },
+    "warnings": [
+      "THIS REPORT IGNORES startDate AND endDate COMPLETELY. Verified: a 2019 one-minute window and a September 2026 window return byte-identical output. It is a snapshot taken at request time, not a statement for a period. A broker who runs it 'for last month' and shows it to a client is showing today's numbers.",
+      "Totals are correct only while every account shares one currency. With mixed account currencies the totals add unlike units, the same way 'amount' does in the Trades Report."
+    ],
+    "seeAlso": [153, 172, 176]
+  },
+
+  "153": {
+    "summary": "Account statement expressed in one chosen currency.",
+    "grain": "One row per account.",
+    "warnings": [
+      "Refuses to run without a filter and returns HTTP 406 with error code 1.6.2.2 (PARAM / REPORT_REQUEST / FILTER_TYPE / EMPTY). Supply assetName, e.g. assetName=USD."
+    ],
+    "seeAlso": [119, 172, 176]
+  },
+
+  "34487": {
+    "summary": "Auto-liquidation events.",
+    "warnings": [
+      "Refuses to run without a filter (HTTP 406, error 1.6.2.2). Supply accountId."
+    ]
+  },
+
+  "148": {
+    "warnings": [
+      "Very heavy. On the demo stand it does not finish within 120 seconds, so the catalogue has no column list for it. Run it with a narrow date range and expect to wait, or ask a DBA for its definition."
+    ]
+  },
+
+  "34796": {
+    "summary": "pg_stat_activity - a raw dump of PostgreSQL session activity on the Back Office database.",
+    "warnings": [
+      "This is a database-internals report, not a business report. It is an example of the fact that reports are arbitrary SQL. Do not expose it to brokers."
+    ]
+  }
+}

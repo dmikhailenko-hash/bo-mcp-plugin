@@ -1,0 +1,49 @@
+{
+  "name": "traderevolution-bo",
+  "description": "Back-office tools for the TraderEvolution BO REST API: explain saved reports and their columns from a local catalogue, discover endpoints from the Swagger specification, and call them with automatic authentication. Read-only until writes are explicitly enabled.",
+  "version": "1.1.0",
+  "author": {
+    "name": "Denis Mikhailenko"
+  },
+  "homepage": "https://github.com/dmikhailenko-hash/bo-mcp-plugin",
+  "repository": "https://github.com/dmikhailenko-hash/bo-mcp-plugin",
+  "license": "MIT",
+  "keywords": ["traderevolution", "back-office", "rest", "swagger", "trading", "reports"],
+  "userConfig": {
+    "bo_base_url": {
+      "type": "string",
+      "title": "BO API base URL",
+      "description": "Base URL including the basePath, without a trailing slash. Example: https://un-demo.traderevolution.com:8443/proftrading/rest",
+      "default": "https://un-demo.traderevolution.com:8443/proftrading/rest"
+    },
+    "bo_login": {
+      "type": "string",
+      "title": "BO login",
+      "description": "Your own back-office login. Each user authenticates as themselves, so back-office permissions and audit records stay per-person."
+    },
+    "bo_password": {
+      "type": "string",
+      "title": "BO password",
+      "description": "Your own back-office password. Stored in your local Claude Code settings, never in the repository.",
+      "sensitive": true
+    },
+    "bo_allow_writes": {
+      "type": "boolean",
+      "title": "Allow write requests",
+      "description": "Off means GET only. On permits POST, PUT, PATCH and DELETE, except the endpoints protected below.",
+      "default": false
+    },
+    "bo_allow_dangerous": {
+      "type": "boolean",
+      "title": "Allow money and user-destructive endpoints",
+      "description": "Permits account operations (deposit, withdrawal, adjustment), user and account deletion, password resets and position rollbacks. Enable only against a demo or test server.",
+      "default": false
+    },
+    "bo_insecure_tls": {
+      "type": "boolean",
+      "title": "Skip TLS verification",
+      "description": "Enable only when the BO server presents a self-signed certificate, typically on demo and test environments.",
+      "default": false
+    }
+  }
+}

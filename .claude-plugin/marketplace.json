@@ -1,0 +1,13 @@
+{
+  "name": "bo-mcp-plugin",
+  "owner": {
+    "name": "Denis Mikhailenko"
+  },
+  "plugins": [
+    {
+      "name": "traderevolution-bo",
+      "source": ".",
+      "description": "Back-office tools for the TraderEvolution BO REST API: discover endpoints from the Swagger specification and call them with automatic authentication. Read-only until writes are explicitly enabled."
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "traderevolution-bo": {
+      "command": "${TR_BO_PYTHON:-python}",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/server/bo_mcp_server.py"],
+      "env": {
+        "TR_BO_BASE_URL": "${user_config.bo_base_url}",
+        "TR_BO_LOGIN": "${user_config.bo_login}",
+        "TR_BO_PASSWORD": "${user_config.bo_password}",
+        "TR_BO_ALLOW_WRITES": "${user_config.bo_allow_writes}",
+        "TR_BO_ALLOW_DANGEROUS": "${user_config.bo_allow_dangerous}",
+        "TR_BO_INSECURE_TLS": "${user_config.bo_insecure_tls}"
+      }
+    }
+  }
+}

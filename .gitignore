@@ -1,0 +1,30 @@
+# Environment files — never commit credentials
+.env
+.env.local
+.env.*.local
+
+# Cached Swagger specification, downloaded per machine
+server/swagger.cache.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Temporary files
+*.tmp
+temp/
+.cache

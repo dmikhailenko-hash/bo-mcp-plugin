@@ -1,0 +1,35 @@
+{
+  "_comment": [
+    "Saved reports that are junk left on the stand, hidden from the report tools.",
+    "",
+    "Nothing here changes the Back Office. Reports are not deleted; this file only",
+    "decides what the MCP server surfaces.",
+    "",
+    "This list is deliberately narrow. The Back Office already restricts reports per",
+    "user - a non-administrator sees fewer of them in GET /reports - so there is no",
+    "need to reproduce that here. What the BO cannot know is which reports are dated",
+    "snapshots, (copy) duplicates, superseded versions or somebody's test, and those",
+    "are noise for everyone. Only those are listed.",
+    "",
+    "Hidden reports disappear from bo_search_reports, bo_explain_report refuses them,",
+    "and bo_request blocks GET /reports/{id} before the request leaves the machine.",
+    "Set TR_BO_SHOW_ALL_REPORTS=true to see them anyway, for maintenance.",
+    "",
+    "To restore a report, delete its entry. To hide a new one, add it with a reason."
+  ],
+
+  "hidden": {
+    "4393":  "Superseded: the name says OLD. Use 151 Order Book History.",
+    "8833":  "Personal copy of 174 Client app error logs.",
+    "9950":  "Personal ad-hoc report.",
+    "34490": "Scratch abbreviation of 39188 Daily risk rule trigger.",
+    "34796": "pg_stat_activity - PostgreSQL session internals, not a business report.",
+    "36894": "Scratch, the name is a typo of 'no response task'.",
+    "37390": "Scratch variant of 141 Order Book Report.",
+    "37394": "Named test report.",
+    "40798": "Marked (copy) of 176 Statement report.",
+    "40994": "Dated snapshot from 2023-10-25.",
+    "48703": "Scratch duplicate of 150 Account operation report.",
+    "49769": "Marked (copy) of 176 Statement report."
+  }
+}
