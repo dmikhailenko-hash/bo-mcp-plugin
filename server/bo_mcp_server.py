@@ -55,17 +55,45 @@ DEFAULT_BASE_URL = "https://un-demo.traderevolution.com:8443/proftrading/rest"
 WRITE_METHODS = ("POST", "PUT", "PATCH", "DELETE")
 MAX_RESPONSE_CHARS = 20000
 
-# Endpoints that move money, delete people, or reset credentials. Blocked even
-# when writes are enabled, unless TR_BO_ALLOW_DANGEROUS is also set.
+# Endpoints that move money, destroy objects, or reconfigure the platform for
+# everyone. Blocked even when writes are enabled, unless TR_BO_ALLOW_DANGEROUS
+# is also set. Order matters: check_permitted reports the first rule that
+# matches, so specific rules come before the catch-all DELETE.
 DANGEROUS_RULES = (
+    # -- money ------------------------------------------------------------- #
     (WRITE_METHODS, r"^/accountOperations", "account operations (deposit / withdrawal / adjustment)"),
     (WRITE_METHODS, r"^/assetsBalances/[^/]+/(deposit|withdrawal)", "asset balance deposit / withdrawal"),
-    (("DELETE",), r"^/users(/|$)", "user deletion"),
-    (("DELETE",), r"^/accounts(/|$)", "account deletion"),
+    (("PATCH", "PUT"), r"^/trades/[^/]+$", "trade modification (positions are recalculated after it)"),
+    (("PATCH", "PUT"), r"^/positions/[^/]+$", "position modification"),
+    (("PATCH", "PUT"), r"^/orders/[^/]+(/(cancel|rollback))?$", "a live client order"),
+    (("POST",), r"^/positions/[^/]+/close$", "forced position close"),
+    (("POST",), r"^/accounts/[^/]+/positions/close$", "forced close of every position on an account"),
+    (("POST",), r"^/positions/[^/]+/requestExercise$", "option exercise"),
+
+    # -- people and credentials -------------------------------------------- #
     (WRITE_METHODS, r"^/users/[^/]+/(resetPassword|changePassword)", "password reset / change"),
     (WRITE_METHODS, r"^/closeAccount", "account closing"),
-    (("DELETE",), r"^/positions(/|$)", "position rollback"),
     (WRITE_METHODS, r"^/passwordBlacklist", "password blacklist modification"),
+
+    # -- platform-wide configuration --------------------------------------- #
+    (("PATCH", "PUT"), r"^/(configuration|execution|quotes|connectors|externalresources|profile)/settings",
+     "platform settings that apply to every user"),
+    (("PATCH", "PUT", "POST", "DELETE"), r"^/quotesFilters", "global quote filters"),
+    (("PATCH", "PUT", "POST"), r"^/servers(/|$)", "server configuration"),
+    (("PATCH", "PUT"), r"^/(routes|userGroups|users)/[^/]+/servers$", "moving routes or users between servers"),
+    (("PATCH", "PUT"), r"^/routes/[^/]+$", "route configuration"),
+    (("POST",), r"^/routes/[^/]+/actions$", "starting / stopping a route"),
+    (("POST",), r"^/fixGateways/[^/]+/(actions|sequenceNumbers)$", "FIX gateway state"),
+    (("POST",), r"^/kafka/producers/[^/]+/actions$", "Kafka producer state"),
+    (("PATCH", "PUT"), r"^/instruments/[^/]+$", "instrument settings, including its trading status"),
+
+    # -- named deletions, kept for a precise message ------------------------ #
+    (("DELETE",), r"^/users(/|$)", "user deletion"),
+    (("DELETE",), r"^/accounts(/|$)", "account deletion"),
+    (("DELETE",), r"^/positions(/|$)", "position rollback"),
+
+    # -- anything else that removes an object ------------------------------- #
+    (("DELETE",), r"^/", "deletion — DELETE is guarded by default"),
 )
 
 
